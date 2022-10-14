@@ -16,15 +16,15 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, data, ...other } = props;
-  const [items, setItems] = useState(Array.from(({length:4})))
+  const [items, setItems] = useState(Array.from({length:4}))
   const [hasMore, setHasMore] = useState(true)
   const fetchMoreData =()=>{
-    if(items >= data.viewed.length){
+    if(items.length >= data.viewed.length){
         setHasMore(false);
         return
     }
     setTimeout(()=>{
-        setItems(items.concat(data.viewed.from({length:4})))
+        setItems(items.concat(Array.from({length:4})))
     },3000)
   }
   return (
@@ -35,7 +35,13 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-    {/* <InfiniteScroll dataLength={data.viewed ? data.viewed.length : 0} next={()=>fetchMoreData} hasMore={hasMore} loader={<CircularProgress/>}> */}
+    <InfiniteScroll height={500} dataLength={items.length} next={()=>fetchMoreData} hasMore={hasMore} loader={<CircularProgress/>}
+    endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>End of news</b>
+        </p>
+      }
+    >
       {value === index && (
         <Box sx={{ p: 3 }}>
           {index === 0 ?
@@ -51,7 +57,7 @@ function TabPanel(props: TabPanelProps) {
           )) : ''}
         </Box>
       )}
-      {/* </InfiniteScroll> */}
+      </InfiniteScroll>
     </div>
   );
 }
